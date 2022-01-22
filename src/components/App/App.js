@@ -6,6 +6,8 @@ import ContactForm from '../ContactForm';
 import ContactList from '../ContactList';
 import Filter from '../Filter';
 
+const LS_KEY = 'reader_item_index';
+
 class App extends Component {
   state = {
     contacts: [
@@ -57,6 +59,20 @@ class App extends Component {
     }
     return filterContact;
   };
+
+  componentDidMount() {
+    const savedStateContacts = localStorage.getItem(LS_KEY);
+
+    if (savedStateContacts) {
+      this.setState({ contacts: JSON.parse(savedStateContacts) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const { contacts } = this.state;
